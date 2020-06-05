@@ -10,6 +10,142 @@ class MinHeap {
     this.tree = [null];
     this.size = 0;
   }
+
+
+  /* REFERENCE HELPERS */
+  // nondestructive return of rootValue
+  getRootValue = () => this.tree[1];
+
+  // returns parentIndex of inputIndex
+  getParentIndex = (inputIndex) => {
+    return inputIndex % 2 === 0
+      ? inputIndex / 2
+      : (inputIndex - 1) / 2;
+  }
+
+  // returns specified children indices of inputIndex. returns undefined
+      // for any index larger than size
+  getLeftChildIndex = (inputIndex) => {
+    const supposedIndex = inputIndex * 2;
+    return supposedIndex < this.size
+      ? supposedIndex
+      : undefined;
+  }
+  getRightChildIndex = (inputIndex) => {
+    const supposedIndex = inputIndex * 2 + 1;
+    return supposedIndex < this.size
+      ? supposedIndex
+      : undefined;
+  }
+
+
+  /* DYNAMIC HELPERS */
+  // adds new value as new lowest leaf and increments size
+  addNewLowestLeaf = (newValue) => {
+    const { tree } = this;
+    this.size++;
+    tree[this.size] = newValue;
+    return;
+  }
+
+  // swaps values of two indices
+  swapValues = (indexOne, indexTwo) => {
+    const { tree } = this;
+    [
+      tree[indexOne], tree[indexTwo]
+    ] = [
+      tree[indexTwo], tree[indexOne]
+    ];
+    return;
+  }
+
+  // (recursive) that compares the node at inputed index to its parent and
+      // swaps values if child value is lesser then recurses
+  bubbleLessers = (targetChildIndex) => {
+    // return if target is root
+    if (targetChildIndex === 1) return;
+
+    const { tree, bubbleLessers } = this;
+    const fetchedParentIndex = this.getParentIndex(targetChildIndex);
+
+    // parent is already lesser, bubbling stops here
+    if (tree[fetchedParentIndex] < tree[targetChildIndex]) {
+      return;
+    }
+
+    // child is lesser, bubble and recurse
+    this.swapValues(targetChildIndex, fetchedParentIndex);
+    return bubbleLessers(fetchedParentIndex);
+  }
+
+  // (recursive) compares the node at inputed index to its children and
+      // amongst them the least value node is made the parent, otherwise
+      // the node stays the parent if it is already the least
+  sinkGreaters = (targetParentIndex) => {
+    const { tree, sinkGreaters } = this;
+    const leftChildIndex = this.getLeftChildIndex(targetParentIndex);
+    const rightChildIndex = this.getRightChildIndex(targetParentIndex);
+
+    // NO children, recursion stops
+    if (!leftChildIndex && !rightChildIndex) return;
+
+    // has TWO children, check if rightChild value is lesser than parentValue
+    if (rightChildIndex && tree[rightChildIndex] < tree[targetParentIndex]) {
+
+      // if so, swap with parentValue whichever is lower: left or right child, then recurse with that childIndex
+      if (tree[leftChildIndex] < tree[rightChildIndex]) {
+        this.swapValues(targetParentIndex, leftChildIndex);
+        return sinkGreaters(leftChildIndex);
+      } else {
+        this.swapValues(targetParentIndex, rightChildIndex);
+        return sinkGreaters(rightChildIndex);
+      }
+    } else {
+
+    // has ONLY LEFT child, swap if childValue is lower and recurse, otherwise recursion stops here
+      if (tree[targetParentIndex] < tree[leftChildIndex]) return;
+      this.swapValues(targetParentIndex, leftChildIndex);
+      return sinkGreaters(leftChildIndex);
+    }
+  }
+
+
+  /* MAIN METHODS */
+  push(newValue) {
+    // if no root, make newValue root
+    if (this.size === 0) {
+      this.addNewLowestLeaf(newValue);
+      return;
+    }
+
+    // add newValue to tree as lowest leaf and apply recursive bubbling to it
+    this.addNewLowestLeaf(newValue);
+    this.bubbleLessers(this.size);
+    return;
+  }
+
+  pop() {
+    const { tree } = this;
+
+    // heap size: 0
+    if (this.size === 0) {
+      return 'this heap is empty';
+    }
+
+    // heap size: 1 - output the root, no sinkGreaters call
+    if (this.size === 1) {
+      this.size--;
+      return tree.pop();
+    }
+
+    // all other heap sizes - output the root, move lowest leaf Value to be root value,
+        // then call recursive sinkGreaters on new root value, decrement size
+    const output = this.getRootValue();
+    tree[1] = tree.pop();
+    this.sinkGreaters(1);
+    this.size--;
+    return output;
+  }
 }
 
 
