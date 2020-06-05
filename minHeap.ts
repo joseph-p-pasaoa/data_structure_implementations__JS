@@ -152,7 +152,7 @@ class MinHeap {
 
 /* TESTS */
 // HELPER FX for checking two arrays are equal in length and composition
-const checkForSameArrayEls = (firstArr, secondArr) => {
+const checkForSameArrayEls = (firstArr: number[], secondArr: number[]) => {
   // arrays should be of same length, returns false if different
   if (firstArr.length !== secondArr.length) return false;
 
