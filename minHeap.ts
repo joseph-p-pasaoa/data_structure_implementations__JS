@@ -17,7 +17,7 @@ class MinHeap {
   getRootValue = () => this.tree[1];
 
   // returns parentIndex of inputIndex
-  getParentIndex = (inputIndex) => {
+  getParentIndex = (inputIndex: number) => {
     return inputIndex % 2 === 0
       ? inputIndex / 2
       : (inputIndex - 1) / 2;
@@ -25,13 +25,13 @@ class MinHeap {
 
   // returns specified children indices of inputIndex. returns undefined
       // for any index larger than size
-  getLeftChildIndex = (inputIndex) => {
+  getLeftChildIndex = (inputIndex: number) => {
     const supposedIndex = inputIndex * 2;
     return supposedIndex < this.size
       ? supposedIndex
       : undefined;
   }
-  getRightChildIndex = (inputIndex) => {
+  getRightChildIndex = (inputIndex: number) => {
     const supposedIndex = inputIndex * 2 + 1;
     return supposedIndex < this.size
       ? supposedIndex
@@ -41,7 +41,7 @@ class MinHeap {
 
   /* DYNAMIC HELPERS */
   // adds new value as new lowest leaf and increments size
-  addNewLowestLeaf = (newValue) => {
+  addNewLowestLeaf = (newValue: number) => {
     const { tree } = this;
     this.size++;
     tree[this.size] = newValue;
@@ -49,7 +49,7 @@ class MinHeap {
   }
 
   // swaps values of two indices
-  swapValues = (indexOne, indexTwo) => {
+  swapValues = (indexOne: number, indexTwo: number) => {
     const { tree } = this;
     [
       tree[indexOne], tree[indexTwo]
@@ -61,7 +61,7 @@ class MinHeap {
 
   // (recursive) that compares the node at inputed index to its parent and
       // swaps values if child value is lesser then recurses
-  bubbleLessers = (targetChildIndex) => {
+  bubbleLessers = (targetChildIndex: number) => {
     // return if target is root
     if (targetChildIndex === 1) return;
 
@@ -81,7 +81,7 @@ class MinHeap {
   // (recursive) compares the node at inputed index to its children and
       // amongst them the least value node is made the parent, otherwise
       // the node stays the parent if it is already the least
-  sinkGreaters = (targetParentIndex) => {
+  sinkGreaters = (targetParentIndex: number) => {
     const { tree, sinkGreaters } = this;
     const leftChildIndex = this.getLeftChildIndex(targetParentIndex);
     const rightChildIndex = this.getRightChildIndex(targetParentIndex);
@@ -111,7 +111,7 @@ class MinHeap {
 
 
   /* MAIN METHODS */
-  push(newValue) {
+  push(newValue: number) {
     // if no root, make newValue root
     if (this.size === 0) {
       this.addNewLowestLeaf(newValue);
