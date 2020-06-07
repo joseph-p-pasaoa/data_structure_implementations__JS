@@ -4,7 +4,7 @@
 
 
 class MinHeap {
-  tree: number[];
+  tree: (null | number)[];
   size: number;
   constructor() {
     this.tree = [null];
@@ -17,7 +17,7 @@ class MinHeap {
   getRootValue = () => this.tree[1];
 
   // returns parentIndex of inputIndex
-  getParentIndex = (inputIndex: number) => {
+  getParentIndex = (inputIndex: number) : number => {
     return inputIndex % 2 === 0
       ? inputIndex / 2
       : (inputIndex - 1) / 2;
@@ -25,13 +25,13 @@ class MinHeap {
 
   // returns specified children indices of inputIndex. returns undefined
       // for any index larger than size
-  getLeftChildIndex = (inputIndex: number) => {
+  getLeftChildIndex = (inputIndex: number) : number | undefined => {
     const supposedIndex = inputIndex * 2;
     return supposedIndex < this.size
       ? supposedIndex
       : undefined;
   }
-  getRightChildIndex = (inputIndex: number) => {
+  getRightChildIndex = (inputIndex: number) : number | undefined => {
     const supposedIndex = inputIndex * 2 + 1;
     return supposedIndex < this.size
       ? supposedIndex
@@ -41,7 +41,7 @@ class MinHeap {
 
   /* DYNAMIC HELPERS */
   // adds new value as new lowest leaf and increments size
-  addNewLowestLeaf = (newValue: number) => {
+  addNewLowestLeaf = (newValue: number) : void => {
     const { tree } = this;
     this.size++;
     tree[this.size] = newValue;
@@ -49,7 +49,7 @@ class MinHeap {
   }
 
   // swaps values of two indices
-  swapValues = (indexOne: number, indexTwo: number) => {
+  swapValues = (indexOne: number, indexTwo: number) : void => {
     const { tree } = this;
     [
       tree[indexOne], tree[indexTwo]
@@ -61,7 +61,7 @@ class MinHeap {
 
   // (recursive) that compares the node at inputed index to its parent and
       // swaps values if child value is lesser then recurses
-  bubbleLessers = (targetChildIndex: number) => {
+  bubbleLessers = (targetChildIndex: number) : object | void => {
     // return if target is root
     if (targetChildIndex === 1) return;
 
@@ -81,10 +81,10 @@ class MinHeap {
   // (recursive) compares the node at inputed index to its children and
       // amongst them the least value node is made the parent, otherwise
       // the node stays the parent if it is already the least
-  sinkGreaters = (targetParentIndex: number) => {
+  sinkGreaters = (targetParentIndex: number) : object | void => {
     const { tree, sinkGreaters } = this;
-    const leftChildIndex = this.getLeftChildIndex(targetParentIndex);
-    const rightChildIndex = this.getRightChildIndex(targetParentIndex);
+    const leftChildIndex: number | void = this.getLeftChildIndex(targetParentIndex);
+    const rightChildIndex: number | void = this.getRightChildIndex(targetParentIndex);
 
     // NO children, recursion stops
     if (!leftChildIndex && !rightChildIndex) return;
@@ -111,7 +111,7 @@ class MinHeap {
 
 
   /* MAIN METHODS */
-  push(newValue: number) {
+  push = (newValue: number) : void => {
     // if no root, make newValue root
     if (this.size === 0) {
       this.addNewLowestLeaf(newValue);
@@ -124,7 +124,7 @@ class MinHeap {
     return;
   }
 
-  pop() {
+  pop = () : number | string => {
     const { tree } = this;
 
     // heap size: 0
@@ -152,7 +152,7 @@ class MinHeap {
 
 /* TESTS */
 // HELPER FX for checking two arrays are equal in length and composition
-const checkForSameArrayEls = (firstArr: number[], secondArr: number[]) => {
+const checkForSameArrayEls = (firstArr: number[], secondArr: number[]) : boolean => {
   // arrays should be of same length, returns false if different
   if (firstArr.length !== secondArr.length) return false;
 
